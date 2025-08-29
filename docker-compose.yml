@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 130175
+      MYSQL_DATABASE: usuariosdb
+    ports:
+      - "3306:3306"
+    networks:
+      - banco_dados
+
+  api:
+    image: api-login
+    container_name: logar-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - banco_dados
+
+networks:
+  banco_dados:
+    driver: bridge
