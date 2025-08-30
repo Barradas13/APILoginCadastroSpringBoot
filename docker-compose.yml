@@ -10,7 +10,14 @@ services:
       - "3306:3306"
     networks:
       - banco_dados
-
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p130175"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+    - ./mysql_data:/var/lib/mysql
+    stop_grace_period: 60s
   api:
     image: api-login
     container_name: logar-api

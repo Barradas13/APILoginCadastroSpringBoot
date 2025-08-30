@@ -3,6 +3,8 @@ package com.logar.demo.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "influencers")
 public class Influencer {
@@ -19,7 +21,8 @@ public class Influencer {
 
     @Column(nullable = false, unique = true, length = 255)
     private String email;
-
+    
+    @JsonIgnore
     @Column(nullable = false, length = 255)
     private String senha;
 
@@ -74,4 +77,10 @@ public class Influencer {
     public void setDataCadastro(LocalDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
+
+    @PrePersist
+    protected void onCreate() {
+        this.dataCadastro = LocalDateTime.now();
+    }
+
 }
