@@ -9,9 +9,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
+
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -20,24 +27,22 @@ public class SecurityConfig {
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable() // desabilita CSRF
+        return http
+            .csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/api/influencers/login", "/api/influencers").permitAll() // login e cadastro públicos
-            .anyRequest().authenticated() // todo o resto exige token
+                .requestMatchers("/api/influencers/login", "/api/influencers").permitAll()
+                .anyRequest().authenticated()
             .and()
-            .httpBasic().disable() // ⚠️ desabilita autenticação Basic
+            .httpBasic().disable()
             .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // sem sessão, usa JWT
-
-        return http.build();
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // ✅ agora sim
+            .build();
     }
 
-
-    // Bean necessário se você precisar injetar AuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
 }

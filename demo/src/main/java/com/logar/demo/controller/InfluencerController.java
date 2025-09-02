@@ -74,6 +74,8 @@ public class InfluencerController {
     // Listar todos
     @GetMapping
     public List<InfluencerResponse> getAllInfluencers() {
+        System.err.println("AAAAAAAAAAAAAAAAA");
+
         return influencerRepository.findAll()
                 .stream()
                 .map(this::toResponse)
@@ -83,6 +85,8 @@ public class InfluencerController {
     // Buscar por id
     @GetMapping("/{id}")
     public ResponseEntity<InfluencerResponse> getInfluencerById(@PathVariable Long id) {
+        System.err.println("OOOOOOOOOOOOOOOOOO");
+        
         return influencerRepository.findById(id)
                 .map(influencer -> ResponseEntity.ok(toResponse(influencer)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
