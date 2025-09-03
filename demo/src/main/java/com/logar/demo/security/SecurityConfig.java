@@ -2,6 +2,7 @@ package com.logar.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,14 +31,15 @@ public class SecurityConfig {
         return http
             .csrf().disable()
             .authorizeHttpRequests()
-                .requestMatchers("/api/influencers/login", "/api/influencers").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/influencers").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/influencers/login").permitAll()
                 .anyRequest().authenticated()
             .and()
             .httpBasic().disable()
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // ✅ agora sim
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
 

@@ -6,12 +6,12 @@ services:
     image: mysql:8.0
     container_name: api_influencer_db
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: aluno
       MYSQL_DATABASE: influencer_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_USER: aluno
+      MYSQL_PASSWORD: aluno
     ports:
-      - "3306:3306"
+      - "3336:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -22,19 +22,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # PhpMyAdmin (opcional, para gerenciar o banco visualmente)
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: api_influencer_phpmyadmin
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-    ports:
-      - "8081:80"
-    depends_on:
-      - mysql
-    networks:
-      - app_network
 
 networks:
   app_network:
